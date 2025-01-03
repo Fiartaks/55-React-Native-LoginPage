@@ -1,100 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-  Image,
-} from "react-native";
-import Loading from "./src/components/Loading";
+import LoginPage from "./src/screens/LoginPage";
+import { NavigationContainer } from "@react-navigation/native";
+import SignupPage from "./src/screens/SignupPage";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-export default function App() {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [result, setResult] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
+const Stack = createNativeStackNavigator();
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("./assets/images/unlock.png")}
-        style={styles.image}
-      />
-      <Text style={styles.welcome}>Welcome {result}</Text>
-      <Text>Name</Text>
-      <TextInput
-        inputMode="email"
-        placeholder="Enter your Email"
-        onChangeText={setName}
-        style={styles.textInputStyle}
-      />
+    <NavigationContainer>
 
-      <Text>Email</Text>
-      <TextInput
-        secureTextEntry={true}
-        placeholder="Enter your last name"
-        onChangeText={setLastName}
-        style={styles.textInputStyle}
-      />
+      <Stack.Navigator>
 
-      <Pressable
-        onPress={() => setIsLoading(true)}
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "gray" : "blue",
-          },
-          styles.button,
-        ]}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+        <Stack.Screen name='Login' component={LoginPage} />
+        <Stack.Screen name='SignUp' component={SignupPage} />
 
-      {isLoading 
-      ? (
-        <Loading 
-        changeIsLoading={() => setIsLoading(false)} />
-      ) : null}
-    </View>
+      </Stack.Navigator>
+
+ 
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#67678768",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textInputStyle: {
-    borderWidth: 1,
-    width: "80%",
-    height: 50,
-    borderRadius: 10,
-    marginVertical: 10,
-    textAlign: "center",
-    color: "blue",
-  },
-  button: {
-    borderWidth: 1,
-    width: "80%",
-    height: 50,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  image: {
-    width: 100,
-    height: 100,
-  },
-  welcome: {
-    fontWeight: "bold",
-    fontSize: 26,
-  },
-});
+};
+export default App;
