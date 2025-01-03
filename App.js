@@ -1,43 +1,61 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Pressable, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  Image,
+} from "react-native";
+import Loading from "./src/components/Loading";
 
 export default function App() {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
-  const[result, setResult] = useState('')
+  const [result, setResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <View style={styles.container}>
-      <Image 
-      source={require('./assets/images/unlock.png')}
-      style={styles.image} />
+      <Image
+        source={require("./assets/images/unlock.png")}
+        style={styles.image}
+      />
       <Text style={styles.welcome}>Welcome {result}</Text>
       <Text>Name</Text>
       <TextInput
-        placeholder="Enter your name"
+        inputMode="email"
+        placeholder="Enter your Email"
         onChangeText={setName}
         style={styles.textInputStyle}
       />
 
-      <Text>Last Name</Text>
+      <Text>Email</Text>
       <TextInput
+        secureTextEntry={true}
         placeholder="Enter your last name"
         onChangeText={setLastName}
         style={styles.textInputStyle}
       />
 
-      <Pressable 
-      onPress={()=>setResult( name+''+lastName)}
-
-      style={ ({pressed})=> [{
-        backgroundColor: pressed ? 'gray' : 'blue'
-      }, styles.button]}>
-
-        <Text style={styles.buttonText}>Save</Text>
+      <Pressable
+        onPress={() => setIsLoading(true)}
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed ? "gray" : "blue",
+          },
+          styles.button,
+        ]}
+      >
+        <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
-      <StatusBar style="auto" />
+      {isLoading 
+      ? (
+        <Loading 
+        changeIsLoading={() => setIsLoading(false)} />
+      ) : null}
     </View>
   );
 }
@@ -71,12 +89,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  image:{
+  image: {
     width: 100,
-    height: 100
+    height: 100,
   },
   welcome: {
     fontWeight: "bold",
-    fontSize:26,
-  }
+    fontSize: 26,
+  },
 });
