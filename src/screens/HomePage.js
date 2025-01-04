@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 const HomePage = () => {
   return (
     <View style={styles.container}>
-      <Text>HomePage</Text>
+      <Text>HoyuiyuiyuimePage</Text>
     </View>
   )
 }

@@ -8,68 +8,60 @@ import {
   Pressable,
   Image,
 } from "react-native";
-import Loading from "../components/Loading";
+import { Loading, CustomTextInput, CustomButton } from "../components";
+import { useSelector, useDispatch } from "react-redux";
+import { setEmail,setPassword,setIsLoading,setLogin } from "../redux/userSlice";
 
-const LoginPage = ({navigation}) => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [result, setResult] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const LoginPage = ({ navigation }) => {
+ // const [email, setEmail] = useState("");
+ // const [password, setPassword] = useState("");
+ // const [isLoading, setIsLoading] = useState(false);
+
+  //userSlice icerisindeki verilerin okunmasi
+  const{email, password, isLoading}=useSelector((state)=>state.user) 
+
+
+  //userSlice icersinde reducer yapilarini kullanma veya veri gonderme
+  const dispatch =useDispatch()
 
   return (
     <View style={styles.container}>
+      <Text style={styles.welcome}>Welcome</Text>
       <Image
         source={require("../../assets/images/unlock.png")}
         style={styles.image}
       />
-      <Text style={styles.welcome}>Welcome {result}</Text>
-      <Text>Name</Text>
-      <TextInput
-        inputMode="email"
-        placeholder="Enter your Email"
-        onChangeText={setName}
-        style={styles.textInputStyle}
+      <CustomTextInput
+        title="Email"
+        isSecureText={false}
+        handleOnChangeText={(text)=>dispatch(setEmail(text))}
+        handleValue={email}
+        handlePlaceHolder="Enter Your Email"
       />
-
-      <Text>Email</Text>
-      <TextInput
-        secureTextEntry={true}
-        placeholder="Enter your last name"
-        onChangeText={setLastName}
-        style={styles.textInputStyle}
+      <CustomTextInput
+        title="Password"
+        isSecureText={true}
+        handleOnChangeText={(password)=>dispatch(setPassword(password))}
+        handleValue={password}
+        handlePlaceHolder="Enter Your Password"
       />
-
-      <Pressable
-        onPress={() => setIsLoading(true)}
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "gray" : "blue",
-          },
-          styles.button,
-        ]}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
-
-      //!ikinci buton
-
-      <Pressable
-        onPress={() => navigation.navigate('SignUp')}
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "gray" : "lightgray",
-            marginTop:50,
-          },
-          styles.signupButton
-        ]}
-      >
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </Pressable>
-
-
+      <CustomButton
+        buttonText="Login"
+        setWidth="80%"
+        handleOnPress={() => dispatch(setLogin())}
+        buttonColor="blue"
+        pressedButtonColor="gray"
+      />
+      <CustomButton
+        buttonText="Sign Up"
+        setWidth="30%"
+        handleOnPress={() => navigation.navigate("Signup")}
+        buttonColor="gray"
+        pressedButtonColor="Lightgray"
+      />
 
       {isLoading ? (
-        <Loading changeIsLoading={() => setIsLoading(false)} />
+        <Loading changeIsLoading={() => dispatch(setIsLoading(false))} />
       ) : null}
     </View>
   );
@@ -80,39 +72,23 @@ export default LoginPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#67678768",
+    backgroundColor: "lightpink",
     alignItems: "center",
     justifyContent: "center",
   },
-  textInputStyle: {
-    borderWidth: 1,
+  inputContainer: {
     width: "80%",
-    height: 50,
-    borderRadius: 10,
-    marginVertical: 10,
-    textAlign: "center",
-    color: "blue",
-  },
-  button: {
-    borderWidth: 1,
-    width: "80%",
-    height: 50,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
+    marginBottom: 20,
   },
   welcome: {
     fontWeight: "bold",
-    fontSize: 26,
+    fontSize: 30,
+    marginBottom: 30,
+    color: "white",
   },
   signupButton: {
     borderWidth: 1,
@@ -121,5 +97,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
 });

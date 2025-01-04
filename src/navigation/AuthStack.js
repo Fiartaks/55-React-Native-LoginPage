@@ -6,14 +6,14 @@ const Stack= createNativeStackNavigator();
 const AuthStack = () => {
   return (
    <Stack.Navigator
-   initialRouteName='Login'
+   initialRouteName='LoginPage'
    screenOptions={{headerShown:false}}
    >
 
      <Stack.Screen name="LoginPage" component={LoginPage} />
-     <Stack.Screen name="SignupPage" component={SignupPage} />
+     <Stack.Screen name="Signup" component={SignupPage} />
 
    </Stack.Navigator>
   )
 }
-export default AuthStack
+export default AuthStack;

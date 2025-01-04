@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import UserStack from "./UserStack";
+import AuthStack from "./AuthStack";
+import { useSelector } from "react-redux";
 
-import AuthStack from "./authStack";
-import UserStack from "./userStack";
+const RootNavigation = () => {
 
-const rootNavigation = () => {
-  const isAuth = false;
+  const{isAuth}=useSelector((state)=>state.user)
 
   return (
     <NavigationContainer screenOptions={{ headerShown: false }}>
@@ -13,5 +13,4 @@ const rootNavigation = () => {
     </NavigationContainer>
   );
 };
-export default rootNavigation;
-const styles = StyleSheet.create({});
+export default RootNavigation;
