@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import { Loading, CustomTextInput, CustomButton } from "../components";
 import { useSelector, useDispatch } from "react-redux";
-import { setEmail,setPassword,setIsLoading,setLogin } from "../redux/userSlice";
+import { setIsLoading,setLogin } from "../redux/userSlice";
+import { login, autoLogin } from "../redux/userSlice";
 
 const LoginPage = ({ navigation }) => {
  // const [email, setEmail] = useState("");
@@ -18,11 +19,27 @@ const LoginPage = ({ navigation }) => {
  // const [isLoading, setIsLoading] = useState(false);
 
   //userSlice icerisindeki verilerin okunmasi
-  const{email, password, isLoading}=useSelector((state)=>state.user) 
+
+  const[email,setEmail] =useState('')
+  const[password,setPassword] =useState('')
+
+
+
+
+  const{isLoading}=useSelector((state)=>state.user) 
 
 
   //userSlice icersinde reducer yapilarini kullanma veya veri gonderme
   const dispatch =useDispatch()
+
+
+ //Kullanici daha once giris yaptiysa kontrol et ve otomatik giris yapi
+
+ useEffect(()=>{
+      dispatch(autoLogin())
+ },[])
+
+
 
   return (
     <View style={styles.container}>
@@ -34,21 +51,21 @@ const LoginPage = ({ navigation }) => {
       <CustomTextInput
         title="Email"
         isSecureText={false}
-        handleOnChangeText={(text)=>dispatch(setEmail(text))}
+        handleOnChangeText={(text)=>setEmail(text.toLowerCase())}
         handleValue={email}
         handlePlaceHolder="Enter Your Email"
       />
       <CustomTextInput
         title="Password"
         isSecureText={true}
-        handleOnChangeText={(password)=>dispatch(setPassword(password))}
+        handleOnChangeText={(password)=>setPassword(password)}
         handleValue={password}
         handlePlaceHolder="Enter Your Password"
       />
       <CustomButton
         buttonText="Login"
         setWidth="80%"
-        handleOnPress={() => dispatch(setLogin())}
+        handleOnPress={() => dispatch(login({email, password}))}
         buttonColor="blue"
         pressedButtonColor="gray"
       />

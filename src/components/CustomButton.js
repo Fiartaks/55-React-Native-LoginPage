@@ -1,5 +1,11 @@
 import { StyleSheet, Text, Pressable } from "react-native";
-const CustomButton = ({ buttonText, setWidth, handleOnPress, buttonColor,pressedButtonColor  }) => {
+const CustomButton = ({
+  buttonText,
+  setWidth,
+  handleOnPress,
+  buttonColor,
+  pressedButtonColor,
+}) => {
   return (
     <Pressable
       onPress={() => handleOnPress()}
