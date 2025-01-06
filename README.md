@@ -16,7 +16,8 @@ Bu projede, bir login ve signup sayfası oluşturduk. Firebase entegrasyonuyla v
 
 ## Kullanılan Teknolojiler
 - React Native
-- Firebase
+- Firebase Authentication 
+- Firebase Storage
 - Redux Toolkit
 
 -Flatlist
