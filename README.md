@@ -19,4 +19,7 @@ Bu projede, bir login ve signup sayfası oluşturduk. Firebase entegrasyonuyla v
 - Firebase
 - Redux Toolkit
 
+-Flatlist
+-Reanimated npx expo install react-native-reanimated
+-Skia
 

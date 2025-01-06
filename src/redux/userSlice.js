@@ -80,7 +80,7 @@ export const register = createAsyncThunk(
       );
 
       const user = userCredential.user;
-      const token = userCredential.stsTokenManager.accessToken;
+      const token = user.stsTokenManager.accessToken;
 
       await sendEmailVerification(user);
 
@@ -167,16 +167,15 @@ export const userSlice = createSlice({
         state.isLoading = true;
         state.isAuth = false;
       })
-      .addCase(register.fulfilled, (state,action) => {
+      .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuth = true;
         state.token = action.payload;
-        
       })
-      .addCase(register.rejected, (state,action) => {
+      .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuth = false;
-        state.error = 'Invalid Email or Password'
+        state.error = "Invalid Email or Password";
       });
   },
 });
