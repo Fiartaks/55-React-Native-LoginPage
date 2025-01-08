@@ -5,7 +5,7 @@ import {
   TextInput,
   View,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import {
   addDoc,
@@ -17,58 +17,34 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import CustomButton from "../components/CustomButton";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userSlice";
 
-import Animated, {BounceIn, FlipInEasyX, FlipInYRight, PinwheelIn} from 'react-native-reanimated';
-
-
+import Animated, {
+  BounceIn,
+  FlipInEasyX,
+  FlipInYRight,
+  PinwheelIn,
+} from "react-native-reanimated";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import {setUserInput, saveData} from '../redux/dataSlice'
 
 const HomePage = () => {
-  const [data, setData] = useState([]);
-  const [isSaved, setIsSaved] = useState(false);
-  const [updateTheData, setupdateTheData] = useState("");
+  const { data, userInput } = useSelector((state) => state.data);
+  // const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
+  console.log('userInput :', userInput)
 
-  console.log(isSaved);
   //console.log('data', data)
 
-  useEffect(() => {
-    getData();
-  }, [isSaved]);
+  // useEffect(() => {
+  //   getData();
+  // }, [isSaved]);
 
-  //SEND DATA TO FIREBASE
-  const sendData = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "reactNativeLesson"), {
-        title: "Zero to Hero",
-        content: "React Native tutorial for beginner",
-        lesson: 99,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
-  };
 
-  //GET DATA FROM FIREBASE
-  const getData = async () => {
-    const allData = [];
 
-    try {
-      const querySnapshot = await getDocs(collection(db, "reactNativeLesson"));
-      querySnapshot.forEach((doc) => {
-        //  console.log(`${doc.id} => ${doc.data()}`);
-        // setData([...data, doc.data()])
-        allData.push({ ...doc.data(), id: doc.id });
-      });
-      setData(allData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   //DELETE DATA FROM FIREBASE
   const deleteData = async (value) => {
@@ -80,109 +56,72 @@ const HomePage = () => {
     }
   };
   //UPDATE DATA FROM FIREBASE
-  const updateData = async (value) => {
-    try {
-      const lessonData = doc(db, "reactNativeLesson", value);
+  // const updateData = async (value) => {
+  //   try {
+  //     const lessonData = doc(db, "reactNativeLesson", value);
 
-      // Set the "capital" field of the city 'DC'
-      await updateDoc(lessonData, {
-        content: updateTheData,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     // Set the "capital" field of the city 'DC'
+  //     await updateDoc(lessonData, {
+  //       content: updateTheData,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   //KULLANICI CIKIS ISLEMLERI
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  const renderItem = ({ item,index }) => {
+  const renderItem = ({ item, index }) => {
     return (
-      <Animated.View 
-       entering={FlipInYRight.delay(100*(index+1))} 
-      style={styles.flatlistContainer}>
-        <Text>{item.id}</Text>
-        <Text>{item.title}</Text>
-        <Text>{item.content}</Text>
+      <Animated.View
+        entering={FlipInYRight.delay(100 * (index + 1))}
+        style={styles.flatlistContainer}
+      >
+        <Pressable
+          onPress={() => deleteData(item.id)}
+          style={styles.iconContainer}
+        >
+          <AntDesign name="checkcircle" size={24} color="black" />
+          <Entypo name="circle" size={24} color="black" />
+        </Pressable>
+        <View style={styles.itemContainer}>
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <Text>{item.content}</Text>
+        </View>
       </Animated.View>
     );
   };
 
-  // {data.map((value,index)=>{
-  //   return(
-  //     <Pressable key={index} onPress={()=>[updateData(value.id), setIsSaved(isSaved === false ? true:false)]} >
-
-  //       <Text>{index}</Text>
-  //       <Text>{value.id}</Text>
-  //       <Text>{value.title}</Text>
-  //       <Text>{value.content}</Text>
-  //       <Text>{value.lesson}</Text>
-  //     </Pressable>
-  //   )
-  //  })}
-
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        value={updateTheData}
-        onChangeText={setupdateTheData}
-        placeholder="enter your data"
-        style={{
-          borderWidth: 1,
-          width: "50%",
-          paddingVertical: 5,
-          textAlign: "center",
-          marginBottom: 30,
-        }}
-      />
-
+      <Text style={styles.title}>TODOLIST</Text>
       <Animated.FlatList
-      entering={PinwheelIn}
+        entering={PinwheelIn}
         data={data}
         style={styles.flatlist}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
 
-      <CustomButton
-        buttonText={"save"}
-        setWidth={"40%"}
-        buttonColor={"blue"}
-        pressedButtonColor={"gray"}
-        handleOnPress={() => {
-          sendData(), setIsSaved(isSaved === false ? true : false);
-        }}
-      />
-      <CustomButton
-        buttonText={"Get Data"}
-        setWidth={"40%"}
-        buttonColor={"blue"}
-        pressedButtonColor={"gray"}
-        handleOnPress={getData}
-      />
-      <CustomButton
-        buttonText={"Delete Data"}
-        setWidth={"40%"}
-        buttonColor={"blue"}
-        pressedButtonColor={"gray"}
-        handleOnPress={deleteData}
-      />
-      <CustomButton
-        buttonText={"Update Data"}
-        setWidth={"40%"}
-        buttonColor={"blue"}
-        pressedButtonColor={"gray"}
-        handleOnPress={updateData}
-      />
-      <CustomButton
-        buttonText={"LOGOUT"}
-        setWidth={"40%"}
-        buttonColor={"red"}
-        pressedButtonColor={"gray"}
-        handleOnPress={handleLogout}
-      />
+      <View style={styles.userInputContainer}>
+        <TextInput
+          value={userInput}
+          onChangeText={(text)=>dispatch(setUserInput(text))}
+          placeholder="Add To Do"
+          style={styles.textInput}
+          placeholderTextColor={'lightgray'}
+        />
+        <CustomButton
+          buttonText={"SAVE"}
+          flexValue={1}
+          buttonColor={"blue"}
+          pressedButtonColor={"gray"}
+          handleOnPress={()=>dispatch(saveData(userInput))}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -195,18 +134,47 @@ const styles = StyleSheet.create({
     backgroundColor: "lightpink",
   },
   flatlistContainer: {
-    borderWidth: 1,
-    marginVertical:5,
-    flex:1,
+    borderBottomWidth: 0.3,
+    marginVertical: 10,
+    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    
-    
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   flatlist: {
     width: "90%",
-    backgroundColor: "#f23266",
-    padding:10,
-
+    padding: 10,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "blue",
+  },
+  itemContainer: {
+    flex: 5,
+    marginLeft: 10,
+  },
+  itemTitle: {
+    fontWeight: "bold",
+  },
+  iconContainer: {
+    borderWidth: 1,
+    flex: 1,
+    alignItems: "center",
+  },
+  userInputContainer:{
+    width: "90%",
+    flexDirection:'row',
+    justifyContent: "center",
+  },
+  textInput:{
+    borderWidth: 1,
+    flex:3,
+    borderRadius: 5,
+    borderWidth:0.3,
+    paddingVertical:5,
+    textAlign:'center',
+    marginRight:5,
+    borderColor:'white'
+  }
 });

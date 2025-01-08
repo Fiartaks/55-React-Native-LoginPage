@@ -24,3 +24,4 @@ Bu projede, bir login ve signup sayfası oluşturduk. Firebase entegrasyonuyla v
 -Reanimated npx expo install react-native-reanimated
 -Skia
 
+expo icon import AntDesign from '@expo/vector-icons/AntDesign';
