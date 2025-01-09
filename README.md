@@ -10,6 +10,7 @@ npm install react-redux
 npm install @reduxjs/toolkit
 
 # React Native Uygulaması
+Genel olarak React ozelliklerini butun olarak bir proje denemek.
 
 ## Açıklama
 Bu projede, bir login ve signup sayfası oluşturduk. Firebase entegrasyonuyla ve Redux kullanarak asenkron işlemleri yönetiyoruz.
